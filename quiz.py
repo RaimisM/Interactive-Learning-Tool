@@ -1,40 +1,67 @@
 import json
 import random
-import sys
+import os
 
 class Question:
-    def __init__(self, question_id, text, answer, question_type, options=None, active=True):
+    def __init__(self, question_id, text, answer, question_type, options=None, active=True, show_count=0, correct_count=0):
         self.question_id = question_id
         self.text = text
         self.answer = answer
         self.question_type = question_type
-        self.options = options
+        self.options = options or []
         self.active = active
+        self.show_count = show_count
+        self.correct_count = correct_count
+
+    def to_dict(self):
+        return {
+            "question_id": self.question_id,
+            "text": self.text,
+            "answer": self.answer,
+            "question_type": self.question_type,
+            "options": self.options,
+            "active": self.active,
+            "show_count": self.show_count,
+            "correct_count": self.correct_count
+        }
+
+
 class QuestionMode:
     def __init__(self, filename="questions.json"):
         self.filename = filename
+        if not os.path.exists(self.filename):
+            with open(self.filename, "w") as file:
+                json.dump([], file)
         self.questions = self.load_questions()
 
-        def load_questions(self):
+    def load_questions(self):
+        try:
             with open(self.filename, "r") as file:
-                return json.load(file)
+                return [Question(**question) for question in json.load(file)]
+        except FileNotFoundError:
+            return []
+        except json.decoder.JSONDecodeError:
+            return []
             
-        def save_questions(self):
-            with open(self.filename, "w") as file:
-                json.dump(self.questions, file)
+    def save_questions(self):
+        with open(self.filename, "w") as file:
+            json.dump([question.__dict__ for question in self.questions], file, indent=4)
         
-        def add_question(self, question, answer):
-            self.questions.append({"question": question, "answer": answer})
-            self.save_questions()
+    def add_question(self, question):
+        self.questions.append(question)
+        self.save_questions()
         
-        def get_question(self):
-            return random.choice(self.questions)
+    def get_question(self):
+        return random.choice(self.questions)
         
-        def check_answer(self, question, answer):
-            return question["answer"] == answer
+    def check_answer(self, question, answer):
+        return question.answer == answer
         
-        def find_question_by_id(self, id):
-            return self.questions[id]
+    def find_question_by_id(self, question_id):
+        for question in self.questions:
+            if question.question_id == question_id:
+                return question
+        return None
         
 class StatisticsMode:
     def __init__(self, question_mode):
@@ -44,39 +71,52 @@ class StatisticsMode:
         correct = 0
         total = 0
         for question in self.question_mode.questions:
-            if question["active"]:
+            if question.active:
                 total += 1
-                if question["correct"]:
+                if question.correct:
                     correct += 1
         return correct, total
     
 class PracticeMode:
-    def __init__(self, queastion_mode):
+    def __init__(self, question_mode):
         self.question_mode = question_mode
         
     def practice(self):
-        active_question = self.question_mode.get_question()
-        if len(active question) < 5:
+        active_question = [question for question in self.question_mode.questions if question.active]
+        if len(active_question) < 5:
             print("Add at least 5 active questions to start practice mode")
             return
         
         while True:
             question = random.choice(active_question)
-            print(f"Question: {question.text}")
+            print(f"\nQuestion:\n{question.text}")
+
             if question.question_type == "multiple_choice":
-                print("Options:", ", ".join(question.options))
-            answer = input("Enter your answer: ").strip().lower()
+                for i, option in enumerate(question.options):
+                    print(f"\t{chr(97 + i)}. {option}")
+                answer = input("Enter your answer (A, B, C, D or type 'exit' to quit): ").strip().lower()
+            elif question.question_type == "free_form":
+                answer = input("Type your answer (or type 'exit' to quit): ").strip()
             if answer == "exit":
-                break
+                return
             
             question.show_count += 1
-            if answer == question.answer:
-                print("Correct!")
-                question.correct_count += 1
-            else:
-                print(f"Wrong! The correct answer is {question.answer}")
-        
-        self.question_mode.save_questions()
+            if question.question_type == "multiple_choice":
+                if question.answer not in question.options:
+                    raise ValueError(f"Answer '{question.answer}' is not in the options {question.options}")
+                correct_letter = chr(97 + question.options.index(question.answer))
+                if answer == correct_letter:
+                    print(f"Correct! Answer is {correct_letter}) {question.answer}")
+                    question.correct_count += 1
+                else:
+                    print(f"Wrong! The correct answer is {correct_letter}) {question.answer}")
+            elif question.question_type == "free_form":
+                if answer.strip().lower() == question.answer.lower():
+                    print("Correct!")
+                    question.correct_count += 1
+                else:
+                    print(f"Wrong! The correct answer is: {question.answer}")
+            self.question_mode.save_questions()
 
 class TestMode:
     def __init__(self, question_mode, results_file="results.txt"):
@@ -84,7 +124,7 @@ class TestMode:
         self.results_file = results_file
 
     def start(self):
-        active_questions = [question for question in self.question_mode.questions if question["active"]]
+        active_questions = [question for question in self.question_mode.questions if question.active]
         if len(active_questions) < 5:
             print("Add at least 5 active questions to start test mode")
             return
@@ -94,14 +134,31 @@ class TestMode:
         for question in active_questions:
             print(f"Question: {question.text}")
             if question.question_type == "multiple_choice":
-                print("Options:", ", ".join(question.options))
-            answer = input("Enter your answer: ").strip().lower()
-            if self.question_mode.check_answer(question, answer):
-                print("Correct!")
-                question["correct"] = True
-                correct += 1
-            else:
-                print(f"Wrong! The correct answer is {question['answer']}")
+                for idx, option in enumerate(question.options):
+                    print(f"{chr(97 + idx)}. {option}")
+                answer = input("Enter your answer (A, B, C, D): ").strip().lower()
+            elif question.question_type == "free_form":
+                answer = input("Type your answer: ").strip().lower()
+
+            if question.question_type == "multiple_choice":
+                if question.answer not in question.options:
+                    raise ValueError(f"Answer '{question.answer}' is not in the options {question.options}")
+                correct_letter = chr(97 + question.options.index(question.answer))
+                if answer == correct_letter.lower():
+                    print(f"Correct! Answer is {correct_letter}) {question.answer}")
+                    question.correct_count += 1
+                    correct += 1
+                else:
+                    print(f"Wrong! The correct answer is {question.answer}")
+            elif question.question_type == "free_form":
+                if answer == question.answer:
+                    print("Correct!")
+                    question.correct_count += 1
+                    correct += 1
+                else:
+                    print(f"Wrong! The correct answer is {question.answer}")
+
+            question.show_count += 1
             total += 1
         
         self.question_mode.save_questions()
@@ -118,32 +175,44 @@ class Quiz:
         self.practice_mode = PracticeMode(self.question_mode)
         self.test_mode = TestMode(self.question_mode)
 
-        def add_question(self):
-            question_id = len(self.question_mode.questions) + 1
-            question_type = input("Enter the question type (multiple_choice or free_form): ").strip().lower()
-            text = input("Enter the question: ").strip()
-            if question_type == "multiple_choice":
-                options = input("Enter the options separated by commas: ").split(",")
-                answer = input("Enter the answer: ").strip().lower()
-                question = Question(question_id, text, answer, question_type, options)
-            elif question_type == "free_form":
-                answer = input("Enter the answer: ").strip().lower()
-                question = Question(question_id, text, answer, question_type)
-            else:
-                sys.exit("Invalid question type")
+    def add_question(self):
+        question_id = len(self.question_mode.questions) + 1
+        question_type = input("Select the question type: \n 1. Multiple Choice \n 2. Free Form\n").strip().lower()
+        if question_type not in ["1", "2"]:
+            print("Invalid choice. For multiple choice, type '1'. For free form, type '2'")
+            return
 
-            self.question_mode.add_question(question)
-            print("Question added successfully!")
+        text = input("Enter the question: ").strip()
 
-        def toggle_question(self):
-            question_id = int(input("Enter the question id: "))
-            question = self.question_mode.find_question_by_id(question_id)
-            if question:
-                question["active"] = not question["active"]
-                self.question_mode.save_questions()
-                print(f"Question {question_id} is now {'active' if question['active'] else 'disabled'}")
-            else:
-                print("Question not found")
+        if question_type == "1":
+            while True:
+                options = input("Enter four options separated by commas: ").split(",")
+                if len(options) != 4:
+                    print("Please provide exactly 4 options")
+                else:
+                    break
+            answer = input("Enter the answer: ").strip().lower()
+            if answer not in options:
+                print("Answer should be one of the options")
+                return
+            question = Question(question_id, text, answer, "multiple_choice", options)
+        
+        elif question_type == "2":
+            answer = input("Enter the answer: ").strip().lower()
+            question = Question(question_id, text, answer, "free_form")
+        
+        self.question_mode.add_question(question)
+        print("Question added successfully!\n")
+    
+    def toggle_question(self):
+        question_id = int(input("Enter the question id: "))
+        question = self.question_mode.find_question_by_id(question_id)
+        if question:
+            question.active = not question.active
+            self.question_mode.save_questions()
+            print(f"Question {question_id} is now {'active' if question.active else 'disabled'}")
+        else:
+            print("Question not found")
 
 class Panel:
     def __init__(self, quiz):

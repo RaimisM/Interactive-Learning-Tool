@@ -1,1 +1,107 @@
-
+[
+    {
+        "question_id": 1,
+        "text": "What is the correct way to create a variable in Python?",
+        "answer": "x = 10",
+        "question_type": "multiple_choice",
+        "options": [
+            "let x = 10",
+            "int x = 10",
+            "x = 10",
+            "var x = 10"
+        ],
+        "active": true,
+        "show_count": 10,
+        "correct_count": 1
+    },
+    {
+        "question_id": 3,
+        "text": "Which of the following is not a keyword in Python?",
+        "answer": "include",
+        "question_type": "multiple_choice",
+        "options": [
+            "import",
+            "return",
+            "finally",
+            "include"
+        ],
+        "active": true,
+        "show_count": 11,
+        "correct_count": 2
+    },
+    {
+        "question_id": 4,
+        "text": "What does the len() function do?",
+        "answer": "Returns the number of items in an object",
+        "question_type": "multiple_choice",
+        "options": [
+            "Returns the last element of a list",
+            "Converts a number to a string",
+            "Returns the number of items in an object",
+            "Removes the last item of a list"
+        ],
+        "active": true,
+        "show_count": 1,
+        "correct_count": 0
+    },
+    {
+        "question_id": 5,
+        "text": "Which of the following is used to handle exceptions in Python?",
+        "answer": "try and except",
+        "question_type": "multiple_choice",
+        "options": [
+            "for and if",
+            "try and catch",
+            "try and except",
+            "catch and finally"
+        ],
+        "active": true,
+        "show_count": 11,
+        "correct_count": 1
+    },
+    {
+        "question_id": 6,
+        "text": "Which operator is used to check if two variables are equal in Python?",
+        "answer": "==",
+        "question_type": "multiple_choice",
+        "options": [
+            "=",
+            "==",
+            "===",
+            "!="
+        ],
+        "active": true,
+        "show_count": 4,
+        "correct_count": 0
+    },
+    {
+        "question_id": 6,
+        "text": "What keyword is used to define a function in Python?",
+        "answer": "def",
+        "question_type": "free_form",
+        "options": [],
+        "active": true,
+        "show_count": 2,
+        "correct_count": 1
+    },
+    {
+        "question_id": 7,
+        "text": "How do you create a list in Python with the numbers 1, 2, and 3?",
+        "answer": "[1, 2, 3]",
+        "question_type": "free_form",
+        "options": [],
+        "active": true,
+        "show_count": 0,
+        "correct_count": 0
+    },
+    {
+        "question_id": 8,
+        "text": "Which data type is used to store True or False values?",
+        "answer": "bool",
+        "question_type": "free_form",
+        "options": [],
+        "active": true,
+        "show_count": 0,
+        "correct_count": 0
+    }
+]
