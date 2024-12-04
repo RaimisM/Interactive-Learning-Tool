@@ -10,9 +10,9 @@
             "x = 10",
             "var x = 10"
         ],
-        "active": true,
-        "show_count": 10,
-        "correct_count": 1
+        "active": false,
+        "show_count": 19,
+        "correct_count": 10
     },
     {
         "question_id": 3,
@@ -26,8 +26,8 @@
             "include"
         ],
         "active": true,
-        "show_count": 11,
-        "correct_count": 2
+        "show_count": 23,
+        "correct_count": 8
     },
     {
         "question_id": 4,
@@ -41,8 +41,8 @@
             "Removes the last item of a list"
         ],
         "active": true,
-        "show_count": 1,
-        "correct_count": 0
+        "show_count": 14,
+        "correct_count": 5
     },
     {
         "question_id": 5,
@@ -56,8 +56,8 @@
             "catch and finally"
         ],
         "active": true,
-        "show_count": 11,
-        "correct_count": 1
+        "show_count": 31,
+        "correct_count": 11
     },
     {
         "question_id": 6,
@@ -71,18 +71,18 @@
             "!="
         ],
         "active": true,
-        "show_count": 4,
-        "correct_count": 0
+        "show_count": 28,
+        "correct_count": 12
     },
     {
-        "question_id": 6,
+        "question_id": 2,
         "text": "What keyword is used to define a function in Python?",
         "answer": "def",
         "question_type": "free_form",
         "options": [],
         "active": true,
-        "show_count": 2,
-        "correct_count": 1
+        "show_count": 22,
+        "correct_count": 11
     },
     {
         "question_id": 7,
@@ -91,8 +91,8 @@
         "question_type": "free_form",
         "options": [],
         "active": true,
-        "show_count": 0,
-        "correct_count": 0
+        "show_count": 18,
+        "correct_count": 5
     },
     {
         "question_id": 8,
@@ -101,7 +101,37 @@
         "question_type": "free_form",
         "options": [],
         "active": true,
-        "show_count": 0,
-        "correct_count": 0
+        "show_count": 16,
+        "correct_count": 8
+    },
+    {
+        "question_id": 9,
+        "text": "Which method is used to add an element to the end of a list in Python?",
+        "answer": "append()",
+        "question_type": "multiple_choice",
+        "options": [
+            "insert()",
+            "append()",
+            "extend()",
+            "add()"
+        ],
+        "active": true,
+        "show_count": 6,
+        "correct_count": 3
+    },
+    {
+        "question_id": 10,
+        "text": "What is the result of the operation print(3 ** 2)?",
+        "answer": "9",
+        "question_type": "multiple_choice",
+        "options": [
+            "5",
+            "6",
+            "9",
+            "8"
+        ],
+        "active": true,
+        "show_count": 4,
+        "correct_count": 2
     }
 ]
