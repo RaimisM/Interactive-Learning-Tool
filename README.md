@@ -22,12 +22,10 @@ This application allows users to add and manage quiz questions, practice, and te
 ### 3. Disable/Enable Questions
 - Users can toggle the status (active/disabled) of a question by its ID.
 - The question details are shown for confirmation before making changes.
-- Disabled questions do not appear in **Practice** or **Test** modes.
-- The enabled/disabled status is stored in a file for persistence.
 
 ### 4. Practice Mode
 - Offers non-stop practice questions.
-- **Weighted Randomness:** Questions answered incorrectly appear more frequently, while those answered correctly appear less often.
+- Questions answered incorrectly appear more frequently, while those answered correctly appear less often.
 - Probabilities persist between sessions.
 
 ### 5. Test Mode
@@ -35,4 +33,12 @@ This application allows users to add and manage quiz questions, practice, and te
 - Questions are chosen randomly and do not repeat within a single test.
 - At the end of the test, the user is shown their score.
 - Scores, along with the date and time, are saved in `results.txt`.
+
+## File Structure
+- quiz.py
+- README.md
+- results.txt
+- questions.json
+- test_quiz.py
+- LICENSE
 

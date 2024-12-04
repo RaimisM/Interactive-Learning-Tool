@@ -10,9 +10,9 @@
             "x = 10",
             "var x = 10"
         ],
-        "active": false,
-        "show_count": 19,
-        "correct_count": 10
+        "active": true,
+        "show_count": 23,
+        "correct_count": 11
     },
     {
         "question_id": 3,
@@ -26,8 +26,8 @@
             "include"
         ],
         "active": true,
-        "show_count": 23,
-        "correct_count": 8
+        "show_count": 29,
+        "correct_count": 9
     },
     {
         "question_id": 4,
@@ -41,8 +41,8 @@
             "Removes the last item of a list"
         ],
         "active": true,
-        "show_count": 14,
-        "correct_count": 5
+        "show_count": 22,
+        "correct_count": 7
     },
     {
         "question_id": 5,
@@ -56,8 +56,8 @@
             "catch and finally"
         ],
         "active": true,
-        "show_count": 31,
-        "correct_count": 11
+        "show_count": 37,
+        "correct_count": 14
     },
     {
         "question_id": 6,
@@ -71,8 +71,8 @@
             "!="
         ],
         "active": true,
-        "show_count": 28,
-        "correct_count": 12
+        "show_count": 35,
+        "correct_count": 13
     },
     {
         "question_id": 2,
@@ -81,8 +81,8 @@
         "question_type": "free_form",
         "options": [],
         "active": true,
-        "show_count": 22,
-        "correct_count": 11
+        "show_count": 32,
+        "correct_count": 12
     },
     {
         "question_id": 7,
@@ -91,7 +91,7 @@
         "question_type": "free_form",
         "options": [],
         "active": true,
-        "show_count": 18,
+        "show_count": 24,
         "correct_count": 5
     },
     {
@@ -101,8 +101,8 @@
         "question_type": "free_form",
         "options": [],
         "active": true,
-        "show_count": 16,
-        "correct_count": 8
+        "show_count": 22,
+        "correct_count": 9
     },
     {
         "question_id": 9,
@@ -116,7 +116,7 @@
             "add()"
         ],
         "active": true,
-        "show_count": 6,
+        "show_count": 7,
         "correct_count": 3
     },
     {
@@ -131,7 +131,7 @@
             "8"
         ],
         "active": true,
-        "show_count": 4,
-        "correct_count": 2
+        "show_count": 7,
+        "correct_count": 3
     }
 ]

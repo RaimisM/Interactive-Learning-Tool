@@ -3,7 +3,6 @@ import random
 import os
 from datetime import datetime
 
-
 class Question:
     def __init__(self, question_id, text, answer, question_type, options=None, active=True, show_count=0, correct_count=0):
         self._question_id = question_id
@@ -79,6 +78,23 @@ class Question:
     def correct_count(self, value):
         self._correct_count = value
 
+    def add_show_count(self):
+        self._show_count += 1
+
+    def add_correct_count(self):
+        self._correct_count += 1
+
+    def calculate_correct_rate(self):
+        return (self._correct_count / self._show_count * 100) if self._show_count > 0 else 0
+
+    def is_answer_correct(self, answer):
+        if self._question_type == "multiple_choice":
+            correct_letter = chr(97 + self._options.index(self._answer))
+            return answer == correct_letter.lower()
+        elif self._question_type == "free_form":
+            return answer.strip().lower() == self._answer.lower()
+        return False
+
     def to_dict(self):
         return {
             "question_id": self.question_id,
@@ -91,6 +107,18 @@ class Question:
             "correct_count": self.correct_count
         }
 
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            question_id=data.get("question_id"),
+            text=data.get("text"),
+            answer=data.get("answer"),
+            question_type=data.get("question_type"),
+            options=data.get("options", []),
+            active=data.get("active", True),
+            show_count=data.get("show_count", 0),
+            correct_count=data.get("correct_count", 0),
+        )
 
 class QuestionMode:
     def __init__(self, filename="questions.json"):
@@ -148,42 +176,41 @@ class StatisticsMode:
 class Answer:
     @staticmethod
     def question_answering(question, answer, question_mode):
-        question.show_count += 1
-        
+        question.add_show_count()
+
         if question.question_type == "multiple_choice":
             if question.answer not in question.options:
                 raise ValueError(f"Answer '{question.answer}' is not in the options {question.options}")
             correct_letter = chr(97 + question.options.index(question.answer))
 
-            if answer == correct_letter.lower():
+            if question.is_answer_correct(answer):
                 print(f"\033[32mCorrect!\033[0m Answer is {correct_letter}) {question.answer}")
-                question.correct_count += 1
+                question.add_correct_count()
             else:
                 print(f"\033[91mWrong!\033[0m The correct answer is {correct_letter}) {question.answer}")
 
         elif question.question_type == "free_form":
-            if answer.strip().lower() == question.answer.lower():
+            if question.is_answer_correct(answer):
                 print("\033[32mCorrect!\033[0m")
-                question.correct_count += 1
+                question.add_correct_count()
             else:
                 print(f"\033[91mWrong!\033[0m The correct answer is {question.answer}")
 
         question_mode.save_questions()
+
 class PracticeMode:
     def __init__(self, question_mode):
         self.question_mode = question_mode
-        
+
     def practice(self):
-        active_question = [question for question in self.question_mode.questions if question.active]
-        if len(active_question) < 5:
+        active_questions = [question for question in self.question_mode.questions if question.active]
+        if len(active_questions) < 5:
             print("Add at least 5 active questions to start practice mode")
             return
-        
-        while True:
-            weights = [max(1, question.show_count - question.correct_count) for question in active_question]
-            
 
-            question = random.choices(active_question, weights=weights, k=1)[0]
+        while True:
+            weights = [max(1, question.show_count - question.correct_count) for question in active_questions]
+            question = random.choices(active_questions, weights=weights, k=1)[0]
             print(f"Question:\n\033[1m{question.text}\033[0m")
 
             if question.question_type == "multiple_choice":
@@ -192,11 +219,13 @@ class PracticeMode:
                 answer = input("Enter your answer (a, b, c, d or type 'exit' to quit): ").strip().lower()
             elif question.question_type == "free_form":
                 answer = input("Type your answer (or type 'exit' to quit): ").strip()
+
             if answer == "exit":
                 print("Exiting practice mode")
                 return
-            
+
             Answer.question_answering(question, answer, self.question_mode)
+
 
 class TestMode:
     def __init__(self, question_mode, results_file="results.txt"):
@@ -208,17 +237,17 @@ class TestMode:
         if len(active_questions) < 5:
             print("Add at least 5 active questions to start test mode")
             return
-        
+
         while True:
             try:
-                number_questions = int(input(f"Enter the number of questions you want to solve ( min 5 - max {len(active_questions)}): "))
+                number_questions = int(input(f"Enter the number of questions you want to solve (min 5 - max {len(active_questions)}): "))
                 if number_questions < 5 or number_questions > len(active_questions):
                     print(f"Please enter a number between 5 and {len(active_questions)}")
                 else:
                     break
             except ValueError:
                 print("Invalid number")
-        
+
         active_questions = random.sample(active_questions, number_questions)
 
         correct = 0
@@ -232,14 +261,13 @@ class TestMode:
             elif question.question_type == "free_form":
                 answer = input("Type your answer: ").strip().lower()
 
+            is_correct = question.is_answer_correct(answer)
             Answer.question_answering(question, answer, self.question_mode)
 
             total += 1
-            if question.question_type == "multiple_choice" and answer == chr(97 + question.options.index(question.answer)):
+            if is_correct:
                 correct += 1
-            elif question.question_type == "free_form" and answer.strip().lower() == question.answer.lower():
-                correct += 1
-        
+
         score = f"{correct}/{total}"
         print(f"\033[93mYour score is {score}\033[0m")
         print("\033[93mThank you for taking the test!\033[0m")
@@ -247,7 +275,6 @@ class TestMode:
         time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with open(self.results_file, "a") as file:
             file.write(f"{time} - Score: {score}\n")
-
 
 class Quiz:
     def __init__(self):
@@ -294,9 +321,9 @@ class Quiz:
         print(f"Disabled questions ID: {', '.join(str(question.question_id) for question in self.question_mode.questions if not question.active)}")
         
         try:
-            question_id = int(input("Enter the question id: "))
+            question_id = int(input("Enter the question ID: "))
         except ValueError:
-            print("Invalid question id")
+            print("Invalid question ID")
             return
         question = self.question_mode.find_question_by_id(question_id)
         if question:
