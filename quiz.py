@@ -367,4 +367,6 @@ if __name__ == "__main__":
     panel = Panel(quiz)
     panel.display()
 
-            
+ ##############################################################
+ #
+ # link to pair programing exercise: https://github.com/RaimisM/war_card_game.git 
