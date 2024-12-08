@@ -11,8 +11,8 @@
             "var x = 10"
         ],
         "active": true,
-        "show_count": 23,
-        "correct_count": 11
+        "show_count": 26,
+        "correct_count": 12
     },
     {
         "question_id": 3,
@@ -26,8 +26,8 @@
             "include"
         ],
         "active": true,
-        "show_count": 29,
-        "correct_count": 9
+        "show_count": 33,
+        "correct_count": 11
     },
     {
         "question_id": 4,
@@ -41,7 +41,7 @@
             "Removes the last item of a list"
         ],
         "active": true,
-        "show_count": 22,
+        "show_count": 26,
         "correct_count": 7
     },
     {
@@ -56,8 +56,8 @@
             "catch and finally"
         ],
         "active": true,
-        "show_count": 37,
-        "correct_count": 14
+        "show_count": 44,
+        "correct_count": 16
     },
     {
         "question_id": 6,
@@ -71,8 +71,8 @@
             "!="
         ],
         "active": true,
-        "show_count": 35,
-        "correct_count": 13
+        "show_count": 47,
+        "correct_count": 17
     },
     {
         "question_id": 2,
@@ -81,7 +81,7 @@
         "question_type": "free_form",
         "options": [],
         "active": true,
-        "show_count": 32,
+        "show_count": 36,
         "correct_count": 12
     },
     {
@@ -91,7 +91,7 @@
         "question_type": "free_form",
         "options": [],
         "active": true,
-        "show_count": 24,
+        "show_count": 27,
         "correct_count": 5
     },
     {
@@ -101,8 +101,8 @@
         "question_type": "free_form",
         "options": [],
         "active": true,
-        "show_count": 22,
-        "correct_count": 9
+        "show_count": 29,
+        "correct_count": 12
     },
     {
         "question_id": 9,
@@ -116,7 +116,7 @@
             "add()"
         ],
         "active": true,
-        "show_count": 7,
+        "show_count": 14,
         "correct_count": 3
     },
     {
@@ -130,8 +130,58 @@
             "9",
             "8"
         ],
-        "active": false,
-        "show_count": 7,
+        "active": true,
+        "show_count": 9,
         "correct_count": 3
+    },
+    {
+        "question_id": 11,
+        "text": "2 + 2?",
+        "answer": "4",
+        "question_type": "multiple_choice",
+        "options": [
+            "2",
+            "4",
+            "8",
+            "15"
+        ],
+        "active": true,
+        "show_count": 6,
+        "correct_count": 1
+    },
+    {
+        "question_id": 12,
+        "text": "1 + 1?",
+        "answer": "2",
+        "question_type": "multiple_choice",
+        "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+        ],
+        "active": false,
+        "show_count": 0,
+        "correct_count": 0
+    },
+    {
+        "question_id": 13,
+        "text": "aa?",
+        "answer": "",
+        "question_type": "free_form",
+        "options": [],
+        "active": true,
+        "show_count": 0,
+        "correct_count": 0
+    },
+    {
+        "question_id": 14,
+        "text": "aaa",
+        "answer": "a",
+        "question_type": "free_form",
+        "options": [],
+        "active": true,
+        "show_count": 0,
+        "correct_count": 0
     }
 ]

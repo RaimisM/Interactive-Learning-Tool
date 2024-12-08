@@ -226,7 +226,6 @@ class PracticeMode:
 
             Answer.question_answering(question, answer, self.question_mode)
 
-
 class TestMode:
     def __init__(self, question_mode, results_file="results.txt"):
         self.question_mode = question_mode
@@ -310,8 +309,13 @@ class Quiz:
             question = Question(question_id, text, answer, "multiple_choice", options)
         
         elif question_type == "2":
-            answer = input("Enter the answer: ").strip().lower()
-            question = Question(question_id, text, answer, "free_form")
+            while True:
+                answer = input("Enter the answer: ").strip().lower()
+                if answer == "":
+                    print("Answer can not be empty")
+                else:
+                    question = Question(question_id, text, answer, "free_form")
+                    break
         
         self.question_mode.add_question(question)
         print("Question added successfully!\n")
@@ -327,9 +331,21 @@ class Quiz:
             return
         question = self.question_mode.find_question_by_id(question_id)
         if question:
-            question.active = not question.active
-            self.question_mode.save_questions()
-            print(f"Question {question_id} is now {'active' if question.active else 'disabled'}")
+            print(f"Question ID: {question.question_id}")
+            print(f"Question Text: {question.text}")
+            print(f"Answer: {question.answer}")
+            while True:
+                confirmation = input(f"Are you sure you want to {'disable' if question.active else 'enable'} this question? (yes/no): ").strip().lower()
+                if confirmation == "yes":
+                    question.active = not question.active
+                    self.question_mode.save_questions()
+                    print(f"Question {question_id} is now {'active' if question.active else 'disabled'}")
+                    break
+                elif confirmation == "no":
+                    print("Action cancelled")
+                    break
+                else:
+                    print("Invalid input. Please type 'yes' or 'no'")
         else:
             print("Question not found")
 
@@ -366,7 +382,8 @@ if __name__ == "__main__":
     quiz = Quiz()
     panel = Panel(quiz)
     panel.display()
-
+    question = Question()
+    question._active = False
  ##############################################################
  #
  # link to pair programing exercise: https://github.com/RaimisM/war_card_game.git 
